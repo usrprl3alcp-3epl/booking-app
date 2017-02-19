@@ -1,16 +1,25 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
+Boardrooms reservation app
 
 ### How do I get set up? ###
 
-* Summary of set up
 * Configuration
-* Dependencies
 * Database configuration
 * How to run tests
 * Deployment instructions
+
+# How to run
+
+To start application run:
+
+```bash
+mvn spring-boot:run
+```
+
+Or:
+
+```bash
+mvn clean install
+java -jar ./target/booking-{version}.jar
+```
