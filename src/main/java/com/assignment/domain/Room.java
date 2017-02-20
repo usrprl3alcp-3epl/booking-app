@@ -7,21 +7,22 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalTime;
 
 @Entity
-public class Employee {
+public class Room {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String firstName;
+    private String name;
 
-    private String lastName;
+    private String code;
 
-    private String telephone;
+    private LocalTime startTime;
 
-    private String email;
+    private LocalTime endTime;
 
     public Long getId() {
         return id;
@@ -31,36 +32,36 @@ public class Employee {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getCode() {
+        return code;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEmail() {
-        return email;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     @Override
