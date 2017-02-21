@@ -12,13 +12,15 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-public class BookingRequest {
+public class Reservation {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private LocalDateTime submissionTime;
+    private LocalDateTime submissionDate;
+
+    private LocalDateTime startDate;
 
     private LocalTime duration;
 
@@ -36,12 +38,20 @@ public class BookingRequest {
         this.id = id;
     }
 
-    public LocalDateTime getSubmissionTime() {
-        return submissionTime;
+    public LocalDateTime getSubmissionDate() {
+        return submissionDate;
     }
 
-    public void setSubmissionTime(LocalDateTime submissionTime) {
-        this.submissionTime = submissionTime;
+    public void setSubmissionDate(LocalDateTime submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
     public LocalTime getDuration() {
