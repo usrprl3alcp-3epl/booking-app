@@ -2,8 +2,8 @@ package com.assignment.util;
 
 import java.time.LocalDateTime;
 
-public final class BookingRequestUtils {
-    private BookingRequestUtils() {
+public final class ReservationUtils {
+    private ReservationUtils() {
     }
 
     public static LocalDateTime beginningOfTheWorkDay() {

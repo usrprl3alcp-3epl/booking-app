@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-public class BookingRequest {
+public class Reservation {
 
     @Id
     @GeneratedValue
