@@ -16,6 +16,13 @@ public final class EmployeeBuilder {
         return new EmployeeBuilder();
     }
 
+    public static EmployeeBuilder anEmployeeWithDefaults() {
+        return new EmployeeBuilder().withFirstName("Donald")
+                .withLastName("Trump")
+                .withEmail("trump@mail.us")
+                .withTelephone("+100000001");
+    }
+
     public EmployeeBuilder withId(Long id) {
         this.id = id;
         return this;
@@ -43,7 +50,6 @@ public final class EmployeeBuilder {
 
     public Employee build() {
         Employee employee = new Employee();
-        employee.setId(id);
         employee.setFirstName(firstName);
         employee.setLastName(lastName);
         employee.setTelephone(telephone);

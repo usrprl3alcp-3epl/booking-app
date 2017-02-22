@@ -34,10 +34,6 @@ public class Reservation {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public LocalDateTime getSubmissionDate() {
         return submissionDate;
     }
@@ -76,6 +72,11 @@ public class Reservation {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public LocalDateTime getEndDate() {
+        return startDate.plusHours(duration.getHour())
+                .plusMinutes(duration.getMinute());
     }
 
     @Override

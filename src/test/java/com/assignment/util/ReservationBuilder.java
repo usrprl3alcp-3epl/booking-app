@@ -61,7 +61,6 @@ public final class ReservationBuilder {
 
     public Reservation build() {
         Reservation reservation = new Reservation();
-        reservation.setId(id);
         reservation.setSubmissionDate(submissionDate);
         reservation.setStartDate(startDate);
         reservation.setDuration(duration);
