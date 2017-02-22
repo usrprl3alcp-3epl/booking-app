@@ -46,33 +46,41 @@ public class ReservationServiceImpl implements ReservationService {
         return save(reservation);
     }
 
-    private void checkThatReservationFitsWithOtherReservations(Reservation newReservation)
+    private void checkThatReservationFitsWithOtherReservations(final Reservation reservation)
             throws BookingException {
-        List<Reservation> reservations = fetchReservations(newReservation);
+        List<Reservation> reservations = fetchReservations(reservation);
         String exceptionMessage = "New reservation overlaps with existing reservation";
-        LocalDateTime newReservationStart = newReservation.getStartDate();
-        LocalDateTime newReservationEnd = newReservation.getEndDate();
+        LocalDateTime reservationStart = reservation.getStartDate();
+        LocalDateTime reservationEnd = reservation.getEndDate();
 
-        for (Reservation reservation : reservations) {
-            if (reservation.getId().equals(newReservation.getId())) {
+        for (Reservation existingReservation : reservations) {
+            if (isReservationItself(reservation, existingReservation)) {
                 continue;
             }
-            
-            LocalDateTime reservationStart = reservation.getStartDate();
-            LocalDateTime reservationEnd = reservation.getEndDate();
-            if (reservationStart.isAfter(newReservationStart)
-                    && reservationStart.isBefore(newReservationEnd)) {
+
+            LocalDateTime existingReservationStart = existingReservation.getStartDate();
+            LocalDateTime existingReservationEnd = existingReservation.getEndDate();
+            if (existingReservationStart.isAfter(reservationStart)
+                    && existingReservationStart.isBefore(reservationEnd)) {
                 throw new BookingException(exceptionMessage);
             }
-            if (reservationEnd.isAfter(newReservationStart)
-                    && reservationEnd.isBefore(newReservationEnd)) {
+            if (existingReservationEnd.isAfter(reservationStart)
+                    && existingReservationEnd.isBefore(reservationEnd)) {
                 throw new BookingException(exceptionMessage);
             }
-            if (reservationStart.isEqual(newReservationStart)
-                    || reservationEnd.isEqual(newReservationEnd)) {
+            if (existingReservationStart.isEqual(reservationStart)
+                    || existingReservationEnd.isEqual(reservationEnd)) {
                 throw new BookingException(exceptionMessage);
             }
         }
+    }
+
+    private boolean isReservationItself(Reservation reservation, Reservation existingReservation) {
+        if (reservation.getId() == null
+                || existingReservation.getId() == null) {
+            return false;
+        }
+        return existingReservation.getId().equals(reservation.getId());
     }
 
     private void checkThatReservationFitsRoomWorkingTime(Reservation reservation) throws BookingException {
