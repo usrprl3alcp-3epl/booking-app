@@ -18,6 +18,13 @@ public final class RoomBuilder {
         return new RoomBuilder();
     }
 
+    public static RoomBuilder aRoomWithDefaults() {
+        return new RoomBuilder().withCode("123d")
+                .withName("Vegas")
+                .withStartTime(ReservationUtils.beginningOfTheWorkDay().toLocalTime())
+                .withEndTime(ReservationUtils.endOfTheWorkDay().toLocalTime());
+    }
+
     public RoomBuilder withId(Long id) {
         this.id = id;
         return this;
@@ -45,7 +52,6 @@ public final class RoomBuilder {
 
     public Room build() {
         Room room = new Room();
-        room.setId(id);
         room.setName(name);
         room.setCode(code);
         room.setStartTime(startTime);
