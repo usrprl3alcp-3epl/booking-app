@@ -27,28 +27,37 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation create(Reservation reservation) throws BookingException {
+    public Reservation save(final Reservation reservation) throws BookingException {
+        // TODO switch to JSR-303 validation
         validate(reservation);
-        List<Reservation> reservations = fetchReservations(reservation);
-        checkThatReservationFitsExistingRestrictions(reservation, reservations);
-
+        checkThatReservationFitsRoomWorkingTime(reservation);
+        checkThatReservationFitsWithOtherReservations(reservation);
         return reservationRepository.save(reservation);
     }
 
-    private void checkThatReservationFitsExistingRestrictions(Reservation reservation, List<Reservation> reservations)
-            throws BookingException {
-        Room room = roomRepository.findOne(reservation.getRoom().getId());
-        checkThatReservationFitsRoomWorkingTime(reservation, room);
-        checkThatReservationFitsWithOtherReservations(reservation, reservations);
+    @Override
+    public Reservation update(final Reservation reservation) throws BookingException {
+        // TODO implement common exception handler
+        try {
+            notNull(reservation.getId(), "Reservation Id is null");
+        } catch (Exception e) {
+            throw new BookingException(e);
+        }
+        return save(reservation);
     }
 
-    private void checkThatReservationFitsWithOtherReservations(Reservation newReservation, List<Reservation> reservations)
+    private void checkThatReservationFitsWithOtherReservations(Reservation newReservation)
             throws BookingException {
+        List<Reservation> reservations = fetchReservations(newReservation);
         String exceptionMessage = "New reservation overlaps with existing reservation";
         LocalDateTime newReservationStart = newReservation.getStartDate();
         LocalDateTime newReservationEnd = newReservation.getEndDate();
 
         for (Reservation reservation : reservations) {
+            if (reservation.getId().equals(newReservation.getId())) {
+                continue;
+            }
+            
             LocalDateTime reservationStart = reservation.getStartDate();
             LocalDateTime reservationEnd = reservation.getEndDate();
             if (reservationStart.isAfter(newReservationStart)
@@ -59,10 +68,15 @@ public class ReservationServiceImpl implements ReservationService {
                     && reservationEnd.isBefore(newReservationEnd)) {
                 throw new BookingException(exceptionMessage);
             }
+            if (reservationStart.isEqual(newReservationStart)
+                    || reservationEnd.isEqual(newReservationEnd)) {
+                throw new BookingException(exceptionMessage);
+            }
         }
     }
 
-    private void checkThatReservationFitsRoomWorkingTime(Reservation reservation, Room room) throws BookingException {
+    private void checkThatReservationFitsRoomWorkingTime(Reservation reservation) throws BookingException {
+        Room room = roomRepository.findOne(reservation.getRoom().getId());
         LocalTime reservationStart = reservation.getStartDate().toLocalTime();
         LocalTime roomStart = room.getStartTime();
         LocalTime reservationEnd = reservation.getEndDate().toLocalTime();
@@ -81,9 +95,14 @@ public class ReservationServiceImpl implements ReservationService {
                 reservation.getStartDate(), reservation.getEndDate());
     }
 
-    private void validate(Reservation reservation) {
-        notNull(reservation.getRoom());
-        notNull(reservation.getEmployee());
-        // TODO implement other validation cases
+    private void validate(Reservation reservation) throws BookingException {
+        try {
+            notNull(reservation.getRoom(), "Room is null or doesn't exist");
+            notNull(reservation.getEmployee(), "Employee is null or doesn't exist");
+            // TODO implement other validation cases
+        } catch (Exception e) {
+            throw new BookingException(e);
+        }
+
     }
 }

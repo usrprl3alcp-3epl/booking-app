@@ -95,7 +95,7 @@ public class ReservationServiceImplTest {
     }
 
     private Reservation whenCreateReservation(Reservation reservation) throws BookingException {
-        return reservationService.create(reservation);
+        return reservationService.save(reservation);
     }
 
     /**

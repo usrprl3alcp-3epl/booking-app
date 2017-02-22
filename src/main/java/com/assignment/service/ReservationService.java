@@ -5,6 +5,8 @@ import com.assignment.exception.BookingException;
 
 public interface ReservationService {
 
-    Reservation create(Reservation reservation) throws BookingException;
+    Reservation save(Reservation reservation) throws BookingException;
+
+    Reservation update(Reservation reservation) throws BookingException;
 
 }
