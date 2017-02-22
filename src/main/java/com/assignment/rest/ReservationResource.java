@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 
-import static com.assignment.rest.ErrorResponse.anErrorResponse;
-import static org.springframework.http.ResponseEntity.badRequest;
-import static org.springframework.http.ResponseEntity.ok;
+import static com.assignment.rest.ErrorResponse.anErrorMessage;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RepositoryRestController
@@ -33,9 +33,9 @@ public class ReservationResource {
     public @ResponseBody ResponseEntity<?> createReservation(@RequestBody @Valid final Reservation bookingRequest) {
         try {
             Reservation reservation = reservationService.save(bookingRequest);
-            return ok(reservation);
-        } catch (BookingException e) {
-            return badRequest().body(anErrorResponse(e));
+            return ResponseEntity.status(CREATED).body(reservation);
+        } catch (BookingException ex) {
+            return ResponseEntity.status(CONFLICT).body(anErrorMessage(ex.getMessage()));
         }
     }
 }

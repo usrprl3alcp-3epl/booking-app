@@ -1,30 +1,31 @@
 package com.assignment.rest;
 
-public class ErrorResponse {
+public class ErrorResponse<T> {
 
-    private String message;
+    private T error;
 
-    public ErrorResponse(String message) {
-        this.message = message;
+    public ErrorResponse() {
     }
 
-    public ErrorResponse(Throwable throwable) {
-        this.message = throwable.getMessage();
+    public ErrorResponse(T error) {
+        this.error = error;
     }
 
-    public static ErrorResponse anErrorResponse(Throwable throwable) {
-        return new ErrorResponse(throwable);
+    public T getError() {
+        return error;
     }
 
-    public static ErrorResponse anErrorResponse(String message) {
-        return new ErrorResponse(message);
+    public void setError(T error) {
+        this.error = error;
     }
 
-    public String getMessage() {
-        return message;
+    public static ErrorResponse<String> anErrorMessage(Throwable throwable) {
+        ErrorResponse<String> errorResponse = new ErrorResponse<>();
+        errorResponse.setError(throwable.getMessage());
+        return errorResponse;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public static ErrorResponse<String> anErrorMessage(String message) {
+        return new ErrorResponse<>(message);
     }
 }

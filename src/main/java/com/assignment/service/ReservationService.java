@@ -7,6 +7,4 @@ public interface ReservationService {
 
     Reservation save(Reservation reservation) throws BookingException;
 
-    Reservation update(Reservation reservation) throws BookingException;
-
 }

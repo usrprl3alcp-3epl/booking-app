@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.apache.commons.lang3.Validate.notNull;
-
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
@@ -28,22 +26,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation save(final Reservation reservation) throws BookingException {
-        // TODO switch to JSR-303 validation
-        validate(reservation);
         checkThatReservationFitsRoomWorkingTime(reservation);
         checkThatReservationFitsWithOtherReservations(reservation);
         return reservationRepository.save(reservation);
-    }
-
-    @Override
-    public Reservation update(final Reservation reservation) throws BookingException {
-        // TODO implement common exception handler
-        try {
-            notNull(reservation.getId(), "Reservation Id is null");
-        } catch (Exception e) {
-            throw new BookingException(e);
-        }
-        return save(reservation);
     }
 
     private void checkThatReservationFitsWithOtherReservations(final Reservation reservation)
@@ -103,14 +88,4 @@ public class ReservationServiceImpl implements ReservationService {
                 reservation.getStartDate(), reservation.getEndDate());
     }
 
-    private void validate(Reservation reservation) throws BookingException {
-        try {
-            notNull(reservation.getRoom(), "Room is null or doesn't exist");
-            notNull(reservation.getEmployee(), "Employee is null or doesn't exist");
-            // TODO implement other validation cases
-        } catch (Exception e) {
-            throw new BookingException(e);
-        }
-
-    }
 }
