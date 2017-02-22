@@ -1,23 +1,25 @@
 package com.assignment.rest;
 
+import com.assignment.domain.Reservation;
+import com.assignment.exception.BookingException;
+import com.assignment.service.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+
 import static com.assignment.rest.ErrorResponse.anErrorResponse;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.hateoas.Resource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.assignment.domain.Reservation;
-import com.assignment.exception.BookingException;
-import com.assignment.service.ReservationService;
-
 @RepositoryRestController
+@Validated
 public class ReservationResource {
 
     private final ReservationService reservationService;
@@ -28,9 +30,9 @@ public class ReservationResource {
     }
 
     @RequestMapping(method = POST, value = "/reservations")
-    public @ResponseBody ResponseEntity<?> createReservation(@RequestBody final Resource<Reservation> newReservation) {
+    public @ResponseBody ResponseEntity<?> createReservation(@RequestBody @Valid final Reservation bookingRequest) {
         try {
-            Reservation reservation = reservationService.save(newReservation.getContent());
+            Reservation reservation = reservationService.save(bookingRequest);
             return ok(reservation);
         } catch (BookingException e) {
             return badRequest().body(anErrorResponse(e));

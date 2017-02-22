@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Entity
@@ -18,10 +19,13 @@ public class Room {
 
     private String name;
 
+    @NotNull
     private String code;
 
+    @NotNull
     private LocalTime startTime;
 
+    @NotNull
     private LocalTime endTime;
 
     public Long getId() {

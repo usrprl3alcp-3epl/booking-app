@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -18,16 +19,21 @@ public class Reservation {
     @GeneratedValue
     private Long id;
 
+    // TODO should be generated ?
     private LocalDateTime submissionDate;
 
+    @NotNull
     private LocalDateTime startDate;
 
+    @NotNull
     private LocalTime duration;
 
     @ManyToOne(optional = false)
+    @NotNull
     private Employee employee;
 
     @ManyToOne(optional = false)
+    @NotNull
     private Room room;
 
     public Long getId() {

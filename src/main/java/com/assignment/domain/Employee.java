@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Employee {
@@ -15,10 +16,12 @@ public class Employee {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String firstName;
 
     private String lastName;
 
+    @NotNull
     private String telephone;
 
     private String email;
