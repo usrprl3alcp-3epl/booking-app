@@ -7,4 +7,5 @@ public interface ReservationService {
 
     Reservation save(Reservation reservation) throws BookingException;
 
+    Reservation get(Long id);
 }

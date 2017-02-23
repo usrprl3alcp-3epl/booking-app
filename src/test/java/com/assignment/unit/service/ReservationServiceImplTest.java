@@ -1,5 +1,6 @@
 package com.assignment.unit.service;
 
+import com.assignment.dao.EmployeeRepository;
 import com.assignment.dao.ReservationRepository;
 import com.assignment.dao.RoomRepository;
 import com.assignment.domain.Employee;
@@ -35,15 +36,16 @@ public class ReservationServiceImplTest {
 
     @Mock
     private ReservationRepository reservationRepository;
-
     @Mock
     private RoomRepository roomRepository;
+    @Mock
+    private EmployeeRepository employeeRepository;
 
     private ReservationService reservationService;
 
     @Before
     public void setUp() throws Exception {
-        reservationService = new ReservationServiceImpl(reservationRepository, roomRepository);
+        reservationService = new ReservationServiceImpl(reservationRepository, roomRepository, employeeRepository);
     }
 
     @Test
@@ -128,8 +130,9 @@ public class ReservationServiceImplTest {
     }
 
     private Employee givenEmployee() {
-        return EmployeeBuilder.anEmployeeWithDefaults()
-                .build();
+        Employee employee = EmployeeBuilder.anEmployeeWithDefaults().build();
+        when(employeeRepository.findOne(any(Long.class))).thenReturn(employee);
+        return employee;
     }
 
     private void givenReservationPersisted(final Reservation reservation) {
