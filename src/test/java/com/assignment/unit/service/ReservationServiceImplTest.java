@@ -144,7 +144,7 @@ public class ReservationServiceImplTest {
                 .withRoom(room).build();
 
         List<Reservation> reservations = Arrays.asList(firstReservation, secondReservation);
-        when(reservationRepository.findByRoomIdAndStartDateBetween(any(), any(), any()))
+        when(reservationRepository.findOverlapped(any(), any(), any()))
                 .thenReturn(reservations);
     }
 

@@ -15,4 +15,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                                                       @Param("startDate") LocalDateTime startDate,
                                                       @Param("endDate") LocalDateTime endDate);
 
+    List<Reservation> findOverlapped(@Param("roomId") Long roomId,
+                                     @Param("startDate") LocalDateTime startDate,
+                                     @Param("endDate") LocalDateTime endDate);
+
 }

@@ -8,7 +8,6 @@ import com.assignment.exception.BookingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -34,38 +33,23 @@ public class ReservationServiceImpl implements ReservationService {
     private void checkThatReservationFitsWithOtherReservations(final Reservation reservation)
             throws BookingException {
         List<Reservation> reservations = fetchReservations(reservation);
-        String exceptionMessage = "New reservation overlaps with existing reservation";
-        LocalDateTime reservationStart = reservation.getStartDate();
-        LocalDateTime reservationEnd = reservation.getEndDate();
 
-        for (Reservation existingReservation : reservations) {
-            if (isReservationItself(reservation, existingReservation)) {
-                continue;
-            }
-
-            LocalDateTime existingReservationStart = existingReservation.getStartDate();
-            LocalDateTime existingReservationEnd = existingReservation.getEndDate();
-            if (existingReservationStart.isAfter(reservationStart)
-                    && existingReservationStart.isBefore(reservationEnd)) {
-                throw new BookingException(exceptionMessage);
-            }
-            if (existingReservationEnd.isAfter(reservationStart)
-                    && existingReservationEnd.isBefore(reservationEnd)) {
-                throw new BookingException(exceptionMessage);
-            }
-            if (existingReservationStart.isEqual(reservationStart)
-                    || existingReservationEnd.isEqual(reservationEnd)) {
-                throw new BookingException(exceptionMessage);
-            }
+        if (reservations.isEmpty()) {
+            return;
         }
+        if (isReservationOneAndItself(reservation, reservations)) {
+            return;
+        }
+        throw new BookingException("New reservation overlaps with existing reservation");
     }
 
-    private boolean isReservationItself(Reservation reservation, Reservation existingReservation) {
-        if (reservation.getId() == null
-                || existingReservation.getId() == null) {
+    private boolean isReservationOneAndItself(Reservation reservation, List<Reservation> reservations) {
+        if (reservations.size() > 1) {
             return false;
         }
-        return existingReservation.getId().equals(reservation.getId());
+        Reservation existingReservation = reservations.get(0);
+        return !(reservation.getId() == null
+                || existingReservation.getId() == null) && existingReservation.getId().equals(reservation.getId());
     }
 
     private void checkThatReservationFitsRoomWorkingTime(Reservation reservation) throws BookingException {
@@ -84,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private List<Reservation> fetchReservations(Reservation reservation) {
-        return reservationRepository.findByRoomIdAndStartDateBetween(reservation.getRoom().getId(),
+        return reservationRepository.findOverlapped(reservation.getRoom().getId(),
                 reservation.getStartDate(), reservation.getEndDate());
     }
 

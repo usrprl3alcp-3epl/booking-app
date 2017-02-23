@@ -4,15 +4,17 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@Access(AccessType.FIELD)
+@NamedQuery(name = "Reservation.findOverlapped",
+        query = "select r from Reservation r where (r.room.id = :roomId)" +
+                "and ((r.startDate >= :startDate and r.startDate <= :endDate) or" +
+                "(r.endDate > :startDate and r.endDate <= :endDate))")
 public class Reservation {
 
     @Id
@@ -80,9 +82,14 @@ public class Reservation {
         this.room = room;
     }
 
+    @Access(AccessType.PROPERTY)
     public LocalDateTime getEndDate() {
         return startDate.plusHours(duration.getHour())
                 .plusMinutes(duration.getMinute());
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        // nothing to do
     }
 
     @Override
