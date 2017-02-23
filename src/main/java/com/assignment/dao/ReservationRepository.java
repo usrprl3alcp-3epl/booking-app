@@ -7,6 +7,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Spring Data-REST will create implementation and REST resource by itself.
+ * We should just configure and customize it.
+ */
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findByRoomId(@Param("roomId") Long roomId);

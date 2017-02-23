@@ -23,6 +23,7 @@ import com.assignment.service.ReservationService;
 /**
  * Custom implementation for POST and PUT methods instead of standard Spring Data-Rest.
  * GET and DELETE methods are not customized.
+ * RestExceptionHandler handle some common errors like 500 or 404.
  */
 @RepositoryRestController
 @Validated
