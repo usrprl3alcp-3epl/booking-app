@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Entity
@@ -18,14 +19,21 @@ public class Room {
 
     private String name;
 
+    @NotNull(message = "validation.Room.code.notnull")
     private String code;
 
+    @NotNull(message = "validation.Room.startTime.notnull")
     private LocalTime startTime;
 
+    @NotNull(message = "validation.Room.endTime.notnull")
     private LocalTime endTime;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

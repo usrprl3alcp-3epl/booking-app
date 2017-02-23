@@ -9,7 +9,12 @@ public class BookingException extends Exception {
         super(message);
     }
 
+    public BookingException(Throwable cause) {
+        super(cause);
+    }
+
     public BookingException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

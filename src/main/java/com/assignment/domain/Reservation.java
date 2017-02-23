@@ -4,34 +4,49 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@Access(AccessType.FIELD)
+@NamedQuery(name = "Reservation.findOverlapped",
+        query = "select r from Reservation r where (r.room.id = :roomId)" +
+                "and ((r.startDate >= :startDate and r.startDate <= :endDate) or" +
+                "(r.endDate > :startDate and r.endDate <= :endDate))")
 public class Reservation {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private LocalDateTime submissionDate;
-
+    @NotNull(message = "validation.Reservation.startDate.notnull")
     private LocalDateTime startDate;
 
+    @NotNull(message = "validation.Reservation.duration.notnull")
     private LocalTime duration;
 
     @ManyToOne(optional = false)
+    @NotNull(message = "validation.Reservation.employee.notnull")
     private Employee employee;
 
     @ManyToOne(optional = false)
+    @NotNull(message = "validation.Reservation.room.notnull")
     private Room room;
+
+    private LocalDateTime submissionDate;
+
+    public Reservation() {
+        submissionDate = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getSubmissionDate() {
@@ -74,9 +89,17 @@ public class Reservation {
         this.room = room;
     }
 
+    @Access(AccessType.PROPERTY)
     public LocalDateTime getEndDate() {
+        if (startDate == null || duration == null){
+            return null;
+        }
         return startDate.plusHours(duration.getHour())
                 .plusMinutes(duration.getMinute());
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        // nothing to do
     }
 
     @Override

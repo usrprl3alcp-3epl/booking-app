@@ -52,6 +52,7 @@ public final class RoomBuilder {
 
     public Room build() {
         Room room = new Room();
+        room.setId(id);
         room.setName(name);
         room.setCode(code);
         room.setStartTime(startTime);

@@ -1,10 +1,12 @@
 package com.assignment.util;
 
+import static com.assignment.util.ReservationUtils.beginningOfTheWorkDay;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import com.assignment.domain.Reservation;
 import com.assignment.domain.Employee;
+import com.assignment.domain.Reservation;
 import com.assignment.domain.Room;
 
 public final class ReservationBuilder {
@@ -24,8 +26,7 @@ public final class ReservationBuilder {
 
     public static ReservationBuilder aReservationWithDefaults() {
         return new ReservationBuilder().withSubmissionDate(LocalDateTime.now())
-                .withStartDate(LocalDateTime.now()
-                        .plusHours(1))
+                .withStartDate(beginningOfTheWorkDay().plusHours(1))
                 .withDuration(LocalTime.of(0, 30));
     }
 
@@ -61,11 +62,15 @@ public final class ReservationBuilder {
 
     public Reservation build() {
         Reservation reservation = new Reservation();
-        reservation.setSubmissionDate(submissionDate);
+        reservation.setId(id);
         reservation.setStartDate(startDate);
         reservation.setDuration(duration);
         reservation.setEmployee(employee);
         reservation.setRoom(room);
+        if (submissionDate != null) {
+            reservation.setSubmissionDate(submissionDate);
+        }
         return reservation;
     }
+
 }

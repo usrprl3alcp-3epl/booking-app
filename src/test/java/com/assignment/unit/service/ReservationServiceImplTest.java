@@ -1,5 +1,6 @@
 package com.assignment.unit.service;
 
+import com.assignment.dao.EmployeeRepository;
 import com.assignment.dao.ReservationRepository;
 import com.assignment.dao.RoomRepository;
 import com.assignment.domain.Employee;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
@@ -34,15 +36,16 @@ public class ReservationServiceImplTest {
 
     @Mock
     private ReservationRepository reservationRepository;
-
     @Mock
     private RoomRepository roomRepository;
+    @Mock
+    private EmployeeRepository employeeRepository;
 
     private ReservationService reservationService;
 
     @Before
     public void setUp() throws Exception {
-        reservationService = new ReservationServiceImpl(reservationRepository, roomRepository);
+        reservationService = new ReservationServiceImpl(reservationRepository, roomRepository, employeeRepository);
     }
 
     @Test
@@ -50,32 +53,18 @@ public class ReservationServiceImplTest {
         Employee employee = givenEmployee();
         Room room = givenRoom();
         Reservation reservation = givenReservation(room, employee);
-        givenExistingReservations(room);
-        givenReservationFitsOtherReservations(reservation);
+        givenReservationFitsOtherReservations();
         givenReservationPersisted(reservation);
         Reservation createdReservation = whenCreateReservation(reservation);
         thenReservationCreatedSuccessfully(createdReservation);
     }
 
     @Test(expected = BookingException.class)
-    public void create_overlapWithOtherReservationsByStartTime_Exception() throws Exception {
+    public void create_overlapWithOtherReservations_Exception() throws Exception {
         Employee employee = givenEmployee();
         Room room = givenRoom();
         Reservation reservation = givenReservation(room, employee);
-        givenExistingReservations(room);
-        givenReservationOverlapsOtherReservationsByStartTime(reservation);
-        givenReservationPersisted(reservation);
-        whenCreateReservation(reservation);
-    }
-
-    @Test(expected = BookingException.class)
-    public void create_overlapWithOtherReservationsByEndTime_Exception() throws Exception {
-        Employee employee = givenEmployee();
-        Room room = givenRoom();
-        Reservation reservation = givenReservation(room, employee);
-        givenExistingReservations(room);
-        givenReservationOverlapsOtherReservationsByEndTime(reservation);
-        givenReservationPersisted(reservation);
+        givenReservationOverlapsOtherReservationsByStartTime(reservation, room);
         whenCreateReservation(reservation);
     }
 
@@ -84,9 +73,7 @@ public class ReservationServiceImplTest {
         Employee employee = givenEmployee();
         Room room = givenRoom();
         Reservation reservation = givenReservation(room, employee);
-        givenExistingReservations(room);
         givenReservationOutOfRoomWorkingTime(reservation);
-        givenReservationPersisted(reservation);
         whenCreateReservation(reservation);
     }
 
@@ -95,7 +82,7 @@ public class ReservationServiceImplTest {
     }
 
     private Reservation whenCreateReservation(Reservation reservation) throws BookingException {
-        return reservationService.create(reservation);
+        return reservationService.save(reservation);
     }
 
     /**
@@ -106,59 +93,46 @@ public class ReservationServiceImplTest {
         reservation.setDuration(LocalTime.of(2, 0));
     }
 
-    /**
-     * Reservation start time: 13:30, duration: 2 hours
-     */
-    private void givenReservationFitsOtherReservations(Reservation reservation) {
-        reservation.setStartDate(beginningOfTheWorkDay().plusHours(5).plusMinutes(30));
+    private void givenReservationFitsOtherReservations() {
+        when(reservationRepository.findOverlapped(any(), any(), any())).thenReturn(Collections.emptyList());
+    }
+
+    private void givenReservationOverlapsOtherReservationsByStartTime(Reservation reservation, Room room) {
+        reservation.setStartDate(beginningOfTheWorkDay().plusHours(4)
+                .plusMinutes(30));
         reservation.setDuration(LocalTime.of(2, 0));
-    }
 
-    /**
-     * Reservation start time: 10:30, duration: 2 hours
-     */
-    private void givenReservationOverlapsOtherReservationsByStartTime(Reservation reservation) {
-        reservation.setStartDate(beginningOfTheWorkDay().plusHours(4).plusMinutes(30));
-        reservation.setDuration(LocalTime.of(2, 0));
-    }
-
-    /**
-     * Reservation start time: 8:00, duration: 2 hours 30 minutes, end time: 10:30
-     */
-    private void givenReservationOverlapsOtherReservationsByEndTime(Reservation reservation) {
-        reservation.setStartDate(beginningOfTheWorkDay());
-        reservation.setDuration(LocalTime.of(2, 30));
-    }
-
-    /**
-     * The room reservations: 10:00-13:00
-     */
-    private void givenExistingReservations(Room room) {
-        Reservation firstReservation = aReservationWithDefaults()
-                .withStartDate(LocalDateTime.of(LocalDate.now(), room.getStartTime().plusHours(2)))
-                .withDuration(LocalTime.of(3, 0))
-                .withRoom(room).build();
-        Reservation secondReservation = aReservationWithDefaults()
-                .withStartDate(LocalDateTime.of(LocalDate.now(), room.getStartTime().plusHours(5)))
-                .withDuration(LocalTime.of(0, 15))
-                .withRoom(room).build();
+        Reservation firstReservation =
+                aReservationWithDefaults().withStartDate(LocalDateTime.of(LocalDate.now(), room.getStartTime()
+                        .plusHours(2)))
+                        .withDuration(LocalTime.of(3, 0))
+                        .withRoom(room)
+                        .build();
+        Reservation secondReservation =
+                aReservationWithDefaults().withStartDate(LocalDateTime.of(LocalDate.now(), room.getStartTime()
+                        .plusHours(5)))
+                        .withDuration(LocalTime.of(0, 15))
+                        .withRoom(room)
+                        .build();
 
         List<Reservation> reservations = Arrays.asList(firstReservation, secondReservation);
-        when(reservationRepository.findByRoomIdAndStartDateBetween(any(), any(), any()))
-                .thenReturn(reservations);
+        when(reservationRepository.findOverlapped(any(), any(), any())).thenReturn(reservations);
     }
 
     /**
      * The room's working hours 8:00 - 20:00
      */
     private Room givenRoom() {
-        Room room = RoomBuilder.aRoomWithDefaults().build();
+        Room room = RoomBuilder.aRoomWithDefaults()
+                .build();
         when(roomRepository.findOne(any(Long.class))).thenReturn(room);
         return room;
     }
 
     private Employee givenEmployee() {
-        return EmployeeBuilder.anEmployeeWithDefaults().build();
+        Employee employee = EmployeeBuilder.anEmployeeWithDefaults().build();
+        when(employeeRepository.findOne(any(Long.class))).thenReturn(employee);
+        return employee;
     }
 
     private void givenReservationPersisted(final Reservation reservation) {
@@ -166,9 +140,9 @@ public class ReservationServiceImplTest {
     }
 
     private Reservation givenReservation(Room room, Employee employee) {
-        return aReservationWithDefaults()
-                .withRoom(room)
-                .withEmployee(employee).build();
+        return aReservationWithDefaults().withRoom(room)
+                .withEmployee(employee)
+                .build();
     }
 
 }
