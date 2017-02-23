@@ -19,17 +19,21 @@ public class Room {
 
     private String name;
 
-    @NotNull
+    @NotNull(message = "validation.Room.code.notnull")
     private String code;
 
-    @NotNull
+    @NotNull(message = "validation.Room.startTime.notnull")
     private LocalTime startTime;
 
-    @NotNull
+    @NotNull(message = "validation.Room.endTime.notnull")
     private LocalTime endTime;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

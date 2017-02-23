@@ -21,7 +21,6 @@ import com.assignment.service.ReservationService;
 
 @RepositoryRestController
 @Validated
-@RequestMapping(value = "/reservations")
 public class ReservationResource {
 
     private final ReservationService reservationService;
@@ -31,7 +30,7 @@ public class ReservationResource {
         this.reservationService = reservationService;
     }
 
-    @RequestMapping(method = POST)
+    @RequestMapping(value = "/reservations", method = POST)
     public @ResponseBody ResponseEntity<?> createReservation(@RequestBody @Valid final Reservation bookingRequest) {
         try {
             Reservation reservation = reservationService.save(bookingRequest);

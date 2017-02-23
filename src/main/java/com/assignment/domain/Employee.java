@@ -16,18 +16,22 @@ public class Employee {
     @GeneratedValue
     private Long id;
 
-    @NotNull
+    @NotNull(message = "validation.Employee.firstName.notnull")
     private String firstName;
 
     private String lastName;
 
-    @NotNull
+    @NotNull(message = "validation.Employee.telephone.notnull")
     private String telephone;
 
     private String email;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {

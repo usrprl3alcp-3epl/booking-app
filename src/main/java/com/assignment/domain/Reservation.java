@@ -24,22 +24,26 @@ public class Reservation {
     // TODO should be generated ?
     private LocalDateTime submissionDate;
 
-    @NotNull
+    @NotNull(message = "validation.Reservation.startDate.notnull")
     private LocalDateTime startDate;
 
-    @NotNull
+    @NotNull(message = "validation.Reservation.duration.notnull")
     private LocalTime duration;
 
     @ManyToOne(optional = false)
-    @NotNull
+    @NotNull(message = "validation.Reservation.employee.notnull")
     private Employee employee;
 
     @ManyToOne(optional = false)
-    @NotNull
+    @NotNull(message = "validation.Reservation.room.notnull")
     private Room room;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getSubmissionDate() {
@@ -84,6 +88,9 @@ public class Reservation {
 
     @Access(AccessType.PROPERTY)
     public LocalDateTime getEndDate() {
+        if (startDate == null || duration == null){
+            return null;
+        }
         return startDate.plusHours(duration.getHour())
                 .plusMinutes(duration.getMinute());
     }
