@@ -21,9 +21,6 @@ public class Reservation {
     @GeneratedValue
     private Long id;
 
-    // TODO should be generated ?
-    private LocalDateTime submissionDate;
-
     @NotNull(message = "validation.Reservation.startDate.notnull")
     private LocalDateTime startDate;
 
@@ -37,6 +34,12 @@ public class Reservation {
     @ManyToOne(optional = false)
     @NotNull(message = "validation.Reservation.room.notnull")
     private Room room;
+
+    private LocalDateTime submissionDate;
+
+    public Reservation() {
+        submissionDate = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;

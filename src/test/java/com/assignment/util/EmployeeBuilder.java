@@ -50,6 +50,7 @@ public final class EmployeeBuilder {
 
     public Employee build() {
         Employee employee = new Employee();
+        employee.setId(id);
         employee.setFirstName(firstName);
         employee.setLastName(lastName);
         employee.setTelephone(telephone);

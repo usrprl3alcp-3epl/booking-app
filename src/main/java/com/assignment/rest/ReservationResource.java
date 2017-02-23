@@ -20,6 +20,10 @@ import com.assignment.domain.Reservation;
 import com.assignment.exception.BookingException;
 import com.assignment.service.ReservationService;
 
+/**
+ * Custom implementation for POST and PUT methods instead of standard Spring Data-Rest.
+ * GET and DELETE methods are not customized.
+ */
 @RepositoryRestController
 @Validated
 public class ReservationResource {
