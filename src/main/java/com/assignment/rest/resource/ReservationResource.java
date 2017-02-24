@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.assignment.domain.Reservation;
 import com.assignment.exception.BookingException;
@@ -39,7 +38,7 @@ public class ReservationResource {
     }
 
     @RequestMapping(value = "/reservations", method = POST)
-    public @ResponseBody ResponseEntity<?> createReservation(@RequestBody final Resource<Reservation> bookingRequest) {
+    public ResponseEntity<?> createReservation(@RequestBody final Resource<Reservation> bookingRequest) {
         try {
             Reservation reservation = reservationService.save(bookingRequest.getContent());
             return success(CREATED, reservation);
@@ -49,7 +48,7 @@ public class ReservationResource {
     }
 
     @RequestMapping(value = "/reservations/{reservationId}", method = PUT)
-    public @ResponseBody ResponseEntity<?> updateReservation(@RequestBody final Resource<Reservation> bookingRequest,
+    public ResponseEntity<?> updateReservation(@RequestBody final Resource<Reservation> bookingRequest,
             @PathVariable("reservationId") Long reservationId) {
         if (!isReservationExist(reservationId)) {
             return ResponseEntity.status(NOT_FOUND)
