@@ -12,10 +12,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Collections;
 
 import static com.assignment.util.EmployeeBuilder.anEmployeeWithDefaults;
 import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
@@ -24,6 +29,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.*;
 
@@ -42,7 +48,7 @@ public class ReservationResourceTest {
     public void createReservation_fitsRestrictions_201Created() throws Exception {
         Reservation reservation = givenReservationWithEmployeeAndRoom();
         givenReservationServiceWillSaveSuccessfully(reservation);
-        ResponseEntity<Reservation> response = whenCreateReservation(reservation);
+        ResponseEntity<Resource<Reservation>> response = whenCreateReservation(reservation);
         thenReservationCreatedSuccessfully(response, reservation);
     }
 
@@ -55,15 +61,9 @@ public class ReservationResourceTest {
     }
 
     @Test
-    public void createReservation_withoutEmployee_400BadRequest() throws Exception {
+    public void createReservation_failsValidation_400BadRequest() throws Exception {
         Reservation reservation = givenReservationWithoutEmployee();
-        ResponseEntity<ErrorResponse> response = whenCreateInvalidReservation(reservation);
-        thenFailed(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void createReservation_withoutRoom_400BadRequest() throws Exception {
-        Reservation reservation = givenReservationWithoutRoom();
+        givenReservationServiceThrows(new ConstraintViolationException(Collections.emptySet()));
         ResponseEntity<ErrorResponse> response = whenCreateInvalidReservation(reservation);
         thenFailed(response, BAD_REQUEST);
     }
@@ -72,7 +72,7 @@ public class ReservationResourceTest {
     public void createReservation_serverFails_500InternalServerError() throws Exception {
         Reservation reservation = givenReservationWithEmployeeAndRoom();
         givenReservationServiceThrows(RuntimeException.class);
-        ResponseEntity<Reservation> response = whenCreateReservation(reservation);
+        ResponseEntity<Resource<Reservation>> response = whenCreateReservation(reservation);
         thenFailed(response, INTERNAL_SERVER_ERROR);
     }
 
@@ -82,7 +82,7 @@ public class ReservationResourceTest {
         givenReservationExist(reservation);
         Reservation changedReservation = givenReservationChangedForUpdate(reservation);
         givenReservationServiceWillSaveSuccessfully(changedReservation);
-        ResponseEntity<Reservation> response = whenUpdateReservation(changedReservation);
+        ResponseEntity<Resource<Reservation>> response = whenUpdateReservation(changedReservation);
         thenReservationUpdatedSuccessfully(response, reservation);
     }
 
@@ -90,7 +90,7 @@ public class ReservationResourceTest {
     public void updateReservation_doNotExist_404NotFound() throws Exception {
         Reservation reservation = givenReservationWithEmployeeAndRoom();
         givenReservationNotExist(reservation);
-        ResponseEntity<Reservation> response = whenUpdateReservation(reservation);
+        ResponseEntity<Resource<Reservation>> response = whenUpdateReservation(reservation);
         thenFailed(response, NOT_FOUND);
     }
 
@@ -134,14 +134,18 @@ public class ReservationResourceTest {
 
     private Reservation givenReservationChangedForUpdate(Reservation reservation) {
         return aReservationWithDefaults().withId(reservation.getId())
-                .withEmployee(anEmployeeWithDefaults().build())
-                .withRoom(aRoomWithDefaults().build())
+                .withEmployee(anEmployeeWithDefaults().withId(1L).build())
+                .withRoom(aRoomWithDefaults().withId(1L).build())
                 .withStartDate(reservation.getStartDate().plusMinutes(1))
                 .build();
     }
 
     private void givenReservationServiceThrows(Class exceptionClass) throws BookingException {
         given(reservationService.save(any(Reservation.class))).willThrow(exceptionClass);
+    }
+
+    private void givenReservationServiceThrows(Exception e) throws BookingException {
+        given(reservationService.save(any(Reservation.class))).willThrow(e);
     }
 
     private Reservation givenReservationWithoutRoom() {
@@ -161,37 +165,40 @@ public class ReservationResourceTest {
     }
 
     private Reservation givenReservationWithEmployeeAndRoom() {
-        return aReservationWithDefaults().withEmployee(anEmployeeWithDefaults().build())
-                .withRoom(aRoomWithDefaults().build())
+        return aReservationWithDefaults().withEmployee(anEmployeeWithDefaults().withId(1L).build())
+                .withRoom(aRoomWithDefaults().withId(1L).build())
                 .build();
     }
 
-    private ResponseEntity<Reservation> whenCreateReservation(Reservation reservation) {
-        return restTemplate.postForEntity(RESERVATIONS_RESOURCE_URL, reservation, Reservation.class);
+    private ResponseEntity<Resource<Reservation>> whenCreateReservation(Reservation reservation) {
+        HttpEntity<Resource<Reservation>> requestEntity = new HttpEntity<>(new Resource<>(reservation));
+        return restTemplate.exchange(RESERVATIONS_RESOURCE_URL,
+                POST, requestEntity, new ParameterizedTypeReference<Resource<Reservation>>() {});
     }
 
     private ResponseEntity<ErrorResponse> whenCreateInvalidReservation(Reservation reservation) {
         return restTemplate.postForEntity(RESERVATIONS_RESOURCE_URL, reservation, ErrorResponse.class);
     }
 
-    private ResponseEntity<Reservation> whenUpdateReservation(Reservation reservation) {
+    private ResponseEntity<Resource<Reservation>> whenUpdateReservation(Reservation reservation) {
         String updateUrl = String.format("%s/%d", RESERVATIONS_RESOURCE_URL, reservation.getId());
-        HttpEntity<Reservation> requestEntity = new HttpEntity<>(reservation);
-        return restTemplate.exchange(updateUrl, PUT, requestEntity, Reservation.class);
+        HttpEntity<Resource<Reservation>> requestEntity = new HttpEntity<>(new Resource<>(reservation));
+        return restTemplate.exchange(updateUrl, PUT, requestEntity,
+                new ParameterizedTypeReference<Resource<Reservation>>() {});
     }
 
-    private void thenReservationCreatedSuccessfully(ResponseEntity<Reservation> response,
+    private void thenReservationCreatedSuccessfully(ResponseEntity<Resource<Reservation>> response,
             Reservation expectedReservation) {
         assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
-        Reservation reservation = response.getBody();
+        Reservation reservation = response.getBody().getContent();
         assertThat(reservation, notNullValue());
-        assertThat(reservation, equalTo(expectedReservation));
+        assertThat(reservation.getStartDate(), equalTo(expectedReservation.getStartDate()));
     }
 
-    private void thenReservationUpdatedSuccessfully(ResponseEntity<Reservation> response,
+    private void thenReservationUpdatedSuccessfully(ResponseEntity<Resource<Reservation>> response,
                                                     Reservation expectedReservation) {
         assertThat(response.getStatusCode(), is(OK));
-        Reservation reservation = response.getBody();
+        Reservation reservation = response.getBody().getContent();
         assertThat(reservation, notNullValue());
         assertThat(reservation, not(equalTo(expectedReservation)));
     }
