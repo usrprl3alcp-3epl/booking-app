@@ -1,7 +1,8 @@
-package com.assignment.rest;
+package com.assignment.rest.resource;
 
 import com.assignment.domain.Reservation;
 import com.assignment.exception.BookingException;
+import com.assignment.rest.ErrorResponse;
 import com.assignment.rest.assembler.ReservationResourceAssembler;
 import com.assignment.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;

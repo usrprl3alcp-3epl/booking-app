@@ -3,7 +3,7 @@ package com.assignment.rest.assembler;
 import com.assignment.domain.Employee;
 import com.assignment.domain.Reservation;
 import com.assignment.domain.Room;
-import com.assignment.rest.ReservationResource;
+import com.assignment.rest.resource.ReservationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
