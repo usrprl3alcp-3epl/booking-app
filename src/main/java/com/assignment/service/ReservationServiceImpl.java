@@ -9,11 +9,13 @@ import com.assignment.exception.BookingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Service
+@Validated
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
