@@ -1,5 +1,25 @@
 package com.assignment.unit.service;
 
+import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
+import static com.assignment.util.ReservationUtils.beginningOfTheWorkDay;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import com.assignment.dao.EmployeeRepository;
 import com.assignment.dao.ReservationRepository;
 import com.assignment.dao.RoomRepository;
@@ -11,25 +31,6 @@ import com.assignment.service.ReservationService;
 import com.assignment.service.ReservationServiceImpl;
 import com.assignment.util.EmployeeBuilder;
 import com.assignment.util.RoomBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
-import static com.assignment.util.ReservationUtils.beginningOfTheWorkDay;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReservationServiceImplTest {
@@ -130,7 +131,8 @@ public class ReservationServiceImplTest {
     }
 
     private Employee givenEmployee() {
-        Employee employee = EmployeeBuilder.anEmployeeWithDefaults().build();
+        Employee employee = EmployeeBuilder.anEmployeeWithDefaults()
+                .build();
         when(employeeRepository.findOne(any(Long.class))).thenReturn(employee);
         return employee;
     }

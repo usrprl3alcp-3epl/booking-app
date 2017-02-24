@@ -1,13 +1,14 @@
 package com.assignment.integration.dao;
 
-import com.assignment.integration.BookingApplicationTest;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import com.assignment.integration.BookingApplicationTest;
 
 abstract class AbstractRepositoryTest extends BookingApplicationTest {
 

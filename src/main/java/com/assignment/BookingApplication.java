@@ -1,13 +1,14 @@
 package com.assignment;
 
-import com.assignment.domain.Employee;
-import com.assignment.domain.Reservation;
-import com.assignment.domain.Room;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.http.MediaType;
+
+import com.assignment.domain.Employee;
+import com.assignment.domain.Reservation;
+import com.assignment.domain.Room;
 
 @SpringBootApplication
 public class BookingApplication extends RepositoryRestConfigurerAdapter {

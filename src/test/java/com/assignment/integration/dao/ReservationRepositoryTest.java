@@ -14,11 +14,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.assignment.dao.ReservationRepository;
 import com.assignment.dao.EmployeeRepository;
+import com.assignment.dao.ReservationRepository;
 import com.assignment.dao.RoomRepository;
-import com.assignment.domain.Reservation;
 import com.assignment.domain.Employee;
+import com.assignment.domain.Reservation;
 import com.assignment.domain.Room;
 import com.assignment.util.ReservationBuilder;
 

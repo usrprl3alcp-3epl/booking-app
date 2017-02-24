@@ -1,13 +1,12 @@
 package com.assignment.rest.resource;
 
-import com.assignment.domain.Reservation;
-import com.assignment.exception.BookingException;
-import com.assignment.rest.ErrorResponse;
-import com.assignment.rest.assembler.ReservationResourceAssembler;
-import com.assignment.service.ReservationService;
+import static com.assignment.rest.ErrorResponse.anErrorMessage;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,28 +15,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static com.assignment.rest.ErrorResponse.anErrorMessage;
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import com.assignment.domain.Reservation;
+import com.assignment.exception.BookingException;
+import com.assignment.rest.ErrorResponse;
+import com.assignment.rest.assembler.ReservationResourceAssembler;
+import com.assignment.service.ReservationService;
 
 /**
- * Custom implementation for POST and PUT methods instead of standard Spring Data-Rest.
- * GET and DELETE methods are not customized.
- * RestExceptionHandler handle some common errors like 500 or 404.
+ * Custom implementation for POST and PUT methods instead of standard Spring Data-Rest. GET and
+ * DELETE methods are not customized. RestExceptionHandler handle some common errors like 500 or
+ * 404.
  */
 @RepositoryRestController
 public class ReservationResource {
 
     private final ReservationService reservationService;
-    private final RepositoryEntityLinks entityLinks;
     private final ReservationResourceAssembler resourceAssembler;
 
     @Autowired
-    public ReservationResource(ReservationService reservationService, RepositoryEntityLinks entityLinks,
-                               ReservationResourceAssembler resourceAssembler) {
+    public ReservationResource(ReservationService reservationService, ReservationResourceAssembler resourceAssembler) {
         this.reservationService = reservationService;
-        this.entityLinks = entityLinks;
         this.resourceAssembler = resourceAssembler;
     }
 

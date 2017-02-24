@@ -1,9 +1,9 @@
 package com.assignment.service;
 
+import javax.validation.Valid;
+
 import com.assignment.domain.Reservation;
 import com.assignment.exception.BookingException;
-
-import javax.validation.Valid;
 
 public interface ReservationService {
 

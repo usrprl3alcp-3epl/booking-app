@@ -1,9 +1,20 @@
 package com.assignment.integration.rest;
 
-import com.assignment.domain.Reservation;
-import com.assignment.exception.BookingException;
-import com.assignment.rest.ErrorResponse;
-import com.assignment.service.ReservationService;
+import static com.assignment.util.EmployeeBuilder.anEmployeeWithDefaults;
+import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
+import static com.assignment.util.RoomBuilder.aRoomWithDefaults;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpStatus.*;
+
+import java.util.Collections;
+
+import javax.validation.ConstraintViolationException;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,19 +30,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.ConstraintViolationException;
-import java.util.Collections;
-
-import static com.assignment.util.EmployeeBuilder.anEmployeeWithDefaults;
-import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
-import static com.assignment.util.RoomBuilder.aRoomWithDefaults;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-import static org.springframework.http.HttpStatus.*;
+import com.assignment.domain.Reservation;
+import com.assignment.exception.BookingException;
+import com.assignment.rest.ErrorResponse;
+import com.assignment.service.ReservationService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -134,9 +136,12 @@ public class ReservationResourceTest {
 
     private Reservation givenReservationChangedForUpdate(Reservation reservation) {
         return aReservationWithDefaults().withId(reservation.getId())
-                .withEmployee(anEmployeeWithDefaults().withId(1L).build())
-                .withRoom(aRoomWithDefaults().withId(1L).build())
-                .withStartDate(reservation.getStartDate().plusMinutes(1))
+                .withEmployee(anEmployeeWithDefaults().withId(1L)
+                        .build())
+                .withRoom(aRoomWithDefaults().withId(1L)
+                        .build())
+                .withStartDate(reservation.getStartDate()
+                        .plusMinutes(1))
                 .build();
     }
 
@@ -165,15 +170,18 @@ public class ReservationResourceTest {
     }
 
     private Reservation givenReservationWithEmployeeAndRoom() {
-        return aReservationWithDefaults().withEmployee(anEmployeeWithDefaults().withId(1L).build())
-                .withRoom(aRoomWithDefaults().withId(1L).build())
+        return aReservationWithDefaults().withEmployee(anEmployeeWithDefaults().withId(1L)
+                .build())
+                .withRoom(aRoomWithDefaults().withId(1L)
+                        .build())
                 .build();
     }
 
     private ResponseEntity<Resource<Reservation>> whenCreateReservation(Reservation reservation) {
         HttpEntity<Resource<Reservation>> requestEntity = new HttpEntity<>(new Resource<>(reservation));
-        return restTemplate.exchange(RESERVATIONS_RESOURCE_URL,
-                POST, requestEntity, new ParameterizedTypeReference<Resource<Reservation>>() {});
+        return restTemplate.exchange(RESERVATIONS_RESOURCE_URL, POST, requestEntity,
+                new ParameterizedTypeReference<Resource<Reservation>>() {
+                });
     }
 
     private ResponseEntity<ErrorResponse> whenCreateInvalidReservation(Reservation reservation) {
@@ -184,21 +192,24 @@ public class ReservationResourceTest {
         String updateUrl = String.format("%s/%d", RESERVATIONS_RESOURCE_URL, reservation.getId());
         HttpEntity<Resource<Reservation>> requestEntity = new HttpEntity<>(new Resource<>(reservation));
         return restTemplate.exchange(updateUrl, PUT, requestEntity,
-                new ParameterizedTypeReference<Resource<Reservation>>() {});
+                new ParameterizedTypeReference<Resource<Reservation>>() {
+                });
     }
 
     private void thenReservationCreatedSuccessfully(ResponseEntity<Resource<Reservation>> response,
             Reservation expectedReservation) {
         assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
-        Reservation reservation = response.getBody().getContent();
+        Reservation reservation = response.getBody()
+                .getContent();
         assertThat(reservation, notNullValue());
         assertThat(reservation.getStartDate(), equalTo(expectedReservation.getStartDate()));
     }
 
     private void thenReservationUpdatedSuccessfully(ResponseEntity<Resource<Reservation>> response,
-                                                    Reservation expectedReservation) {
+            Reservation expectedReservation) {
         assertThat(response.getStatusCode(), is(OK));
-        Reservation reservation = response.getBody().getContent();
+        Reservation reservation = response.getBody()
+                .getContent();
         assertThat(reservation, notNullValue());
         assertThat(reservation, not(equalTo(expectedReservation)));
     }
