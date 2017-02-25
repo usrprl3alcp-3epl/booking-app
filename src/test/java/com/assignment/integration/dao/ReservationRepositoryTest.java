@@ -97,8 +97,8 @@ public class ReservationRepositoryTest extends AbstractRepositoryTest {
 
   private void prepareTestData() {
     generateReservations(beginningOfTheWorkDay(), endOfTheWorkDay());
-    generateReservations(beginningOfTheWorkDay().minusDays(3), endOfTheWorkDay().minusDays(3));
-    generateReservations(beginningOfTheWorkDay().minusMonths(2), endOfTheWorkDay().minusMonths(2));
+    generateReservations(beginningOfTheWorkDay().plusDays(3), endOfTheWorkDay().plusDays(3));
+    generateReservations(beginningOfTheWorkDay().plusMonths(2), endOfTheWorkDay().plusMonths(2));
   }
 
   private void generateReservations(LocalDateTime start, LocalDateTime end) {
@@ -108,7 +108,7 @@ public class ReservationRepositoryTest extends AbstractRepositoryTest {
     while (start.isBefore(end)) {
       reservationRepository.save(aReservationWithDefaults()
           .withEmployee(employee)
-          .withStartDate(start)
+          .withStartDate(start.plusNanos(RandomUtils.nextLong(0, 10000)))
           .withRoom(room)
           .build());
       start = start.plusHours(1)
