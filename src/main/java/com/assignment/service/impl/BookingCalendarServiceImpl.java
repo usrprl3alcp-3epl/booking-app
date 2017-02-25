@@ -22,14 +22,13 @@ public class BookingCalendarServiceImpl implements BookingCalendarService {
   }
 
   @Override
-  // TODO grouped chronologically by day
   public BookingCalendar buildBookingCalendar(Long roomId) throws RoomNotFoundException {
     if (roomRepository.findOne(roomId) == null) {
       throw new RoomNotFoundException();
     }
     BookingCalendar bookingCalendar = new BookingCalendar();
     bookingCalendar.setRoomId(roomId);
-    reservationRepository.findByRoomId(roomId)
+    reservationRepository.findByRoomIdOrderByStartDateAsc(roomId)
         .forEach(bookingCalendar::putReservation);
     return bookingCalendar;
   }

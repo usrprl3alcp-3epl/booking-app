@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Resource;
@@ -41,16 +44,23 @@ public class BookingCalendarResourceAssembler extends
 
   @Override
   protected Resource instantiateResource(BookingCalendar bookingCalendar) {
-    Map<LocalDate, List<Resource<Reservation>>> preparedBookingCalendar = bookingCalendar
-        .getBookings().entrySet()
+    Map<LocalDate, List<Resource<Reservation>>> bc = bookingCalendar.getBookings().entrySet()
         .stream()
-        .collect(toMap(Entry::getKey,
-            calendarDateEntry -> calendarDateEntry.getValue()
-                .stream()
-                .map(reservationResourceAssembler::toResource)
-                .collect(toList())));
+        .collect(toMap(Entry::getKey, listReservationMapper(), throwingMerger(), TreeMap::new));
+    return new Resource<>(bc);
+  }
 
-    return new Resource<>(preparedBookingCalendar);
+  private Function<Entry<LocalDate, List<Reservation>>, List<Resource<Reservation>>> listReservationMapper() {
+    return calendarEntry -> calendarEntry.getValue()
+        .stream()
+        .map(reservationResourceAssembler::toResource)
+        .collect(toList());
+  }
+
+  private static <T> BinaryOperator<T> throwingMerger() {
+    return (u, v) -> {
+      throw new IllegalStateException(String.format("Duplicate key %s", u));
+    };
   }
 
 
