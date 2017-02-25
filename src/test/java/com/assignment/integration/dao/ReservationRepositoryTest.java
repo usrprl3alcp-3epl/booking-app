@@ -3,6 +3,7 @@ package com.assignment.integration.dao;
 import static com.assignment.util.ReservationUtils.beginningOfTheWorkDay;
 import static com.assignment.util.ReservationUtils.endOfTheWorkDay;
 import static com.assignment.util.ReservationUtils.generateReservations;
+import static com.assignment.util.ReservationUtils.getRandomId;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -19,7 +20,6 @@ import com.assignment.domain.Reservation;
 import com.assignment.domain.Room;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class ReservationRepositoryTest extends AbstractRepositoryTest {
   @Test
   public void findByRoomIdOrderByStartDateAsc_roomNotExist_emptyList() {
     List<Reservation> reservations = reservationRepository
-        .findByRoomIdOrderByStartDateAsc(RandomUtils.nextLong());
+        .findByRoomIdOrderByStartDateAsc(getRandomId());
     assertThat(reservations, is(empty()));
   }
 

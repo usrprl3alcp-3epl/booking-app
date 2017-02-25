@@ -31,6 +31,10 @@ public final class ReservationUtils {
         .withNano(0);
   }
 
+  public static long getRandomId() {
+    return RandomUtils.nextLong();
+  }
+
   public static List<Reservation> generateReservations(Employee employee, Room room,
       LocalDateTime start, LocalDateTime end) {
     List<Reservation> reservations = new ArrayList<>();

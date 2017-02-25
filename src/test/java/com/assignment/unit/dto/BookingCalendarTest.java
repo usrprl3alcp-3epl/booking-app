@@ -4,6 +4,7 @@ import static com.assignment.util.EmployeeBuilder.anEmployeeWithDefaults;
 import static com.assignment.util.ReservationUtils.beginningOfTheWorkDay;
 import static com.assignment.util.ReservationUtils.endOfTheWorkDay;
 import static com.assignment.util.ReservationUtils.generateReservations;
+import static com.assignment.util.ReservationUtils.getRandomId;
 import static com.assignment.util.RoomBuilder.aRoomWithDefaults;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -16,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.RandomUtils;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 
@@ -68,10 +68,10 @@ public class BookingCalendarTest {
   }
 
   private Room givenRoom() {
-    return aRoomWithDefaults().withId(RandomUtils.nextLong()).build();
+    return aRoomWithDefaults().withId(getRandomId()).build();
   }
 
   private Employee givenEmployee() {
-    return anEmployeeWithDefaults().withId(RandomUtils.nextLong()).build();
+    return anEmployeeWithDefaults().withId(getRandomId()).build();
   }
 }
