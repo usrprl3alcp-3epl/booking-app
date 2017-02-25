@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Spring Data-REST will create implementation and REST resource by itself.
+ * Spring Data-REST will create implementation for Repository and REST resource by itself.
  * We should just configure and customize it.
  */
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
