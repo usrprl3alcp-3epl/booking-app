@@ -21,15 +21,13 @@ import static org.springframework.http.HttpStatus.OK;
 
 import com.assignment.domain.Reservation;
 import com.assignment.exception.BookingException;
+import com.assignment.integration.BookingApplicationTest;
 import com.assignment.rest.ErrorResponse;
 import com.assignment.service.ReservationService;
 import java.util.Collections;
 import javax.validation.ConstraintViolationException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,11 +35,8 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ReservationResourceTest {
+public class ReservationResourceTest extends BookingApplicationTest {
 
   @MockBean
   private ReservationService reservationService;
