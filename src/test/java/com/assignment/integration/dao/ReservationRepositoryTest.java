@@ -1,8 +1,8 @@
 package com.assignment.integration.dao;
 
-import static com.assignment.util.ReservationBuilder.aReservationWithDefaults;
 import static com.assignment.util.ReservationUtils.beginningOfTheWorkDay;
 import static com.assignment.util.ReservationUtils.endOfTheWorkDay;
+import static com.assignment.util.ReservationUtils.generateReservations;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -96,23 +96,14 @@ public class ReservationRepositoryTest extends AbstractRepositoryTest {
   }
 
   private void prepareTestData() {
-    generateReservations(beginningOfTheWorkDay(), endOfTheWorkDay());
-    generateReservations(beginningOfTheWorkDay().plusDays(3), endOfTheWorkDay().plusDays(3));
-    generateReservations(beginningOfTheWorkDay().plusMonths(2), endOfTheWorkDay().plusMonths(2));
-  }
-
-  private void generateReservations(LocalDateTime start, LocalDateTime end) {
     Employee employee = employeeRepository.findOne(FIRST_EMPLOYEE_ID);
     Room room = roomRepository.findOne(FIRST_ROOM_ID);
-
-    while (start.isBefore(end)) {
-      reservationRepository.save(aReservationWithDefaults()
-          .withEmployee(employee)
-          .withStartDate(start.plusNanos(RandomUtils.nextLong(0, 10000)))
-          .withRoom(room)
-          .build());
-      start = start.plusHours(1)
-          .plusMinutes(25);
-    }
+    reservationRepository
+        .save(generateReservations(employee, room, beginningOfTheWorkDay(), endOfTheWorkDay()));
+    generateReservations(employee, room, beginningOfTheWorkDay().plusDays(3),
+        endOfTheWorkDay().plusDays(3));
+    generateReservations(employee, room, beginningOfTheWorkDay().plusMonths(2),
+        endOfTheWorkDay().plusMonths(2));
   }
+
 }
