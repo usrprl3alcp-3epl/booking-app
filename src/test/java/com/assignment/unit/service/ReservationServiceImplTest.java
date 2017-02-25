@@ -28,7 +28,7 @@ import com.assignment.domain.Reservation;
 import com.assignment.domain.Room;
 import com.assignment.exception.BookingException;
 import com.assignment.service.ReservationService;
-import com.assignment.service.ReservationServiceImpl;
+import com.assignment.service.impl.ReservationServiceImpl;
 import com.assignment.util.EmployeeBuilder;
 import com.assignment.util.RoomBuilder;
 
