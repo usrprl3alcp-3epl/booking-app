@@ -3,8 +3,8 @@ package com.assignment.service;
 import com.assignment.dto.BookingCalendar;
 import com.assignment.exception.RoomNotFoundException;
 
-public interface CalendarService {
+public interface BookingCalendarService {
 
-    BookingCalendar buildBookingCalendar(Long roomId) throws RoomNotFoundException;
+  BookingCalendar buildBookingCalendar(Long roomId) throws RoomNotFoundException;
 
 }

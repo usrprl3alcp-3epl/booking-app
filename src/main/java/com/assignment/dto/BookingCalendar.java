@@ -1,38 +1,42 @@
 package com.assignment.dto;
 
+import com.assignment.domain.Reservation;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.assignment.domain.Reservation;
-
 public class BookingCalendar {
 
-    private Map<LocalDate, List<Reservation>> bookings;
+  private Map<LocalDate, List<Reservation>> bookings;
 
-    public BookingCalendar() {
-        this.bookings = new TreeMap<>();
-    }
+  private Long roomId;
 
-    public void putReservation(Reservation reservation) {
-        LocalDate date = reservation.getStartDate()
-                .toLocalDate();
-        List<Reservation> list = bookings.get(date);
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-        list.add(reservation);
-        bookings.put(date, list);
-    }
+  public BookingCalendar() {
+    this.bookings = new TreeMap<>();
+  }
 
-    public Map<LocalDate, List<Reservation>> getBookings() {
-        return bookings;
-    }
+  public void putReservation(Reservation reservation) {
+    LocalDate date = reservation.getStartDate()
+        .toLocalDate();
+    List<Reservation> reservationList = bookings.computeIfAbsent(date, k -> new ArrayList<>());
+    reservationList.add(reservation);
+  }
 
-    public void setBookings(Map<LocalDate, List<Reservation>> bookings) {
-        this.bookings = bookings;
-    }
+  public Map<LocalDate, List<Reservation>> getBookings() {
+    return bookings;
+  }
 
+  public void setBookings(Map<LocalDate, List<Reservation>> bookings) {
+    this.bookings = bookings;
+  }
+
+  public Long getRoomId() {
+    return roomId;
+  }
+
+  public void setRoomId(Long roomId) {
+    this.roomId = roomId;
+  }
 }
