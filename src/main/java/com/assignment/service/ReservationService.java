@@ -1,13 +1,12 @@
 package com.assignment.service;
 
-import javax.validation.Valid;
-
 import com.assignment.domain.Reservation;
 import com.assignment.exception.BookingException;
+import javax.validation.Valid;
 
 public interface ReservationService {
 
-    Reservation save(@Valid Reservation reservation) throws BookingException;
+  Reservation save(@Valid Reservation reservation) throws BookingException;
 
-    Reservation get(Long id);
+  Reservation get(Long id);
 }

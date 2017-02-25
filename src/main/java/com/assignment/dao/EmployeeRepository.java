@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * We should just configure and customize it.
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+
 }
