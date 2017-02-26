@@ -19,7 +19,7 @@ public class Room {
 
   private String name;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   @NotNull(message = "validation.Room.code.notnull")
   private String code;
 
