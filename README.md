@@ -65,7 +65,7 @@ Now that the application is running, you can test it. You can use any REST clien
 
 First you want to see the top level service.
 
-```$bash
+```bash
 $ curl http://localhost:8080
 {
   "links" : [ {
@@ -351,13 +351,14 @@ Let's get booking calendar for second room
 GET http://localhost:8080/calendars/2
 ```
 
-![image_calendar_2](https://cloud.githubusercontent.com/assets/6156085/23343525/1b565116-fc7e-11e6-87c9-8b8a4200e888.png)
+<img src="https://cloud.githubusercontent.com/assets/6156085/23343525/1b565116-fc7e-11e6-87c9-8b8a4200e888.png">
 
 And get all calendars
+
 ```
 GET http://localhost:8080/calendars
 ```
 
-![image_calendars](https://cloud.githubusercontent.com/assets/6156085/23344094/77797fd2-fc87-11e6-9728-68c98717d47f.png)
+<img src="https://cloud.githubusercontent.com/assets/6156085/23344094/77797fd2-fc87-11e6-9728-68c98717d47f.png">
 
 For *Booking Calendar* only *GET* methods are available, cause *Booking Calendar* based on submitted reservations.
