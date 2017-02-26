@@ -5,3 +5,4 @@ DROP TABLE bookingdb.employee;
 DROP DATABASE bookingdb;
 
 DROP USER bookinguser;
+DROP USER bookinguser@localhost;
