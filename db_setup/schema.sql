@@ -1,9 +1,5 @@
 CREATE DATABASE bookingdb;
 
-DROP TABLE bookingdb.reservation;
-DROP TABLE bookingdb.room;
-DROP TABLE bookingdb.employee;
-
 CREATE TABLE bookingdb.employee
 (
     id BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
