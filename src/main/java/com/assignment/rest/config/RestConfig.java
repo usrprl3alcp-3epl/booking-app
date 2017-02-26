@@ -1,4 +1,4 @@
-package com.assignment.rest;
+package com.assignment.rest.config;
 
 import com.assignment.domain.Employee;
 import com.assignment.domain.Reservation;

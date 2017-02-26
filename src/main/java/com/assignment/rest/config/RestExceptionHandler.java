@@ -1,5 +1,6 @@
-package com.assignment.rest;
+package com.assignment.rest.config;
 
+import com.assignment.rest.ErrorResponse;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
