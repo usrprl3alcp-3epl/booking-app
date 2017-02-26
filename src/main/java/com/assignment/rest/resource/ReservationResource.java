@@ -83,8 +83,12 @@ public class ReservationResource {
   }
 
   private ResponseEntity<ErrorResponse<String>> error(HttpStatus status, Exception e) {
+    String errorMessage = null;
+    if (e.getMessage() != null) {
+      errorMessage = environment.getProperty(e.getMessage());
+    }
     return ResponseEntity.status(status)
-        .body(anErrorMessage(environment.getProperty(e.getMessage())));
+        .body(anErrorMessage(errorMessage));
   }
 
 }
