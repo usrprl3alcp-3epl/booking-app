@@ -45,8 +45,8 @@ public class ReservationServiceImpl implements ReservationService {
   }
 
   private void checkThatRoomAndEmployeeExist(Reservation reservation) throws BookingException {
-    String employeeErrorMessage = "Employee actually doesn't exist";
-    String roomErrorMessage = "Room actually doesn't exist";
+    String employeeErrorMessage = "booking.restrictions.employeeDoesntExist";
+    String roomErrorMessage = "booking.restrictions.roomDoesntExist";
     checkThatEntityExist(employeeRepository, reservation.getEmployee()
         .getId(), employeeErrorMessage);
     checkThatEntityExist(roomRepository, reservation.getRoom()
@@ -70,7 +70,7 @@ public class ReservationServiceImpl implements ReservationService {
     if (isReservationOneAndItself(reservation, reservations)) {
       return;
     }
-    throw new BookingException("New reservation overlaps with existing reservation");
+    throw new BookingException("booking.restrictions.overlapReservations");
   }
 
   private boolean isReservationOneAndItself(Reservation reservation,
@@ -97,7 +97,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     if (reservationStart.isBefore(roomStart) || reservationStart.isAfter(roomEnd)
         || reservationEnd.isBefore(roomStart) || reservationEnd.isAfter(roomEnd)) {
-      throw new BookingException("Reservation dates don't fit room restrictions");
+      throw new BookingException("booking.restrictions.roomWorkingTime");
     }
   }
 

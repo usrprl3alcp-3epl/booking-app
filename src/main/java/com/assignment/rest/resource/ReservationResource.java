@@ -14,6 +14,7 @@ import com.assignment.rest.ErrorResponse;
 import com.assignment.rest.assembler.ReservationResourceAssembler;
 import com.assignment.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
@@ -32,12 +33,14 @@ public class ReservationResource {
 
   private final ReservationService reservationService;
   private final ReservationResourceAssembler resourceAssembler;
+  private final Environment environment;
 
   @Autowired
   public ReservationResource(ReservationService reservationService,
-      ReservationResourceAssembler resourceAssembler) {
+      ReservationResourceAssembler resourceAssembler, Environment environment) {
     this.reservationService = reservationService;
     this.resourceAssembler = resourceAssembler;
+    this.environment = environment;
   }
 
   @RequestMapping(value = "/reservations", method = POST)
@@ -80,8 +83,12 @@ public class ReservationResource {
   }
 
   private ResponseEntity<ErrorResponse<String>> error(HttpStatus status, Exception e) {
+    String errorMessage = null;
+    if (e.getMessage() != null) {
+      errorMessage = environment.getProperty(e.getMessage());
+    }
     return ResponseEntity.status(status)
-        .body(anErrorMessage(e.getMessage()));
+        .body(anErrorMessage(errorMessage));
   }
 
 }
