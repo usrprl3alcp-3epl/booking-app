@@ -29,7 +29,7 @@ public class BookingCalendarResourceTest extends BookingApplicationTest {
   @Autowired
   private TestRestTemplate restTemplate;
 
-  private static final String CALENDAR_RESOURCE_URL = "/calendar";
+  private static final String CALENDAR_RESOURCE_URL = "/calendars";
 
   @Test
   public void getCalendar_roomNotFound_404NotFound() throws Exception {
