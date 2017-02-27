@@ -345,10 +345,10 @@ POST
 
 The above stuff is basis, but the major feature of the app is *Booking Calendar* as output. Booking calendar based on submitted reservations and contains bookings which grouped chronologically by day.
 
-Let's get booking calendar for second room
+Let's get booking calendar for first room
 
 ```
-GET http://localhost:8080/calendars/2
+GET http://localhost:8080/calendars/1
 ```
 
 <img src="https://cloud.githubusercontent.com/assets/6156085/23343525/1b565116-fc7e-11e6-87c9-8b8a4200e888.png" width="500">
