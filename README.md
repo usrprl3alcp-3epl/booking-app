@@ -1,6 +1,6 @@
 # Boardrooms reservation app #
 
-There is application that let’s you create booking requests for meetings in boardrooms and retrieve successful booking calendar as output using [Spring Data REST](http://projects.spring.io/spring-data-rest/).
+It is application that let you create booking requests for meetings in boardrooms and retrieve successful booking calendar as output using [Spring Data REST](http://projects.spring.io/spring-data-rest/).
 
 Booking calendar based on submitted reservations and contains bookings which grouped chronologically by day.
 
