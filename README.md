@@ -27,12 +27,6 @@ The app already deployed on AWS and accessible on [booking.us-west-2.elasticbean
 
    Alternatively database schema can be created by hibernate automatically, take a look at **spring.jpa.hibernate.ddl-auto** property. Can be useful for development.
 
-## Deployment instructions
-
-The app no require any additional application server for deployment. There is embedded Tomcat servlet container, instead of deploying to an external instance.
-
-By default app looks for `bookingdb` mysql database at `localhost:3306` with credentials `bookinguser/bookingpass`. By the way, this can be configured in `application.properties`.  
-
 ## How to run
 
 Build jar:
@@ -58,6 +52,12 @@ Or:
 ```bash
 java -jar ./target/booking-{version}.jar
 ```
+
+## Deployment instructions
+
+The app no require any additional application server for deployment. There is embedded Tomcat servlet container, instead of deploying to an external instance.
+
+By default app looks for `bookingdb` mysql database at `localhost:3306` with credentials `bookinguser/bookingpass`. By the way, this can be configured in `application.properties`.  
 
 ## Test the application manually
 
@@ -190,7 +190,7 @@ $ curl http://localhost:8080/employees
   }
 ```
 
-There is possible validation error with *401 Bad request* response. Let's attempt to create employee without `firstName`:
+There is possible validation error with *400 Bad request* response. Let's attempt to create employee without `firstName`:
 
 ```
 POST localhost:8080/employees
@@ -321,7 +321,7 @@ POST
 }
 ```
 
-* Validation's error *401 Bad request* is also present:
+* Validation's error *400 Bad request* is also present:
 
 ```
 POST
@@ -333,7 +333,7 @@ POST
 ```
 
 ```
-401 BAD REQUEST
+400 BAD REQUEST
 {
   "error": [
     "Reservation's owner cannot be null"
