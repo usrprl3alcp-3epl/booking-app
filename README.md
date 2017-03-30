@@ -11,7 +11,7 @@ There are several restrictions:
 
 Spring Data REST takes the features of [Spring HATEOAS](http://projects.spring.io/spring-hateoas/), [Spring Data JPA](http://projects.spring.io/spring-data-jpa/), [HAL](http://stateless.co/hal_specification.html) format for JSON output and combines them together automatically.
 
-The app already deployed on AWS and accessible on [booking.us-west-2.elasticbeanstalk.com](http://booking.us-west-2.elasticbeanstalk.com)
+The app already deployed on AWS and accessible on [ec2-54-213-113-217.us-west-2.compute.amazonaws.com](http://ec2-54-213-113-217.us-west-2.compute.amazonaws.com)
 
 ## How do I get set up? ###
 
